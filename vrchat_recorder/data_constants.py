@@ -1,5 +1,6 @@
 """This class contains all the data constants used in the program."""
 
+
 class CSVHeaderNames:
     """This class contains all the header names for the CSV files."""
 
