@@ -13,11 +13,12 @@ from .data_constants import get_data_type_name
 class GamepadRecorder(ABC_CSVRecorder):
     """Records gamepad data to a csv file.
     Usage:
-    ```python
-    from vrchat_recorder.gamepad_recorder import GamepadRecorder
+        ```python
+        from vrchat_recorder.gamepad_recorder import GamepadRecorder
 
-    gpr = GamepadRecorder("path/to/output/file.csv")
-    gpr.record_background()
+        gpr = GamepadRecorder("path/to/output/file.csv")
+        gpr.record_background()
+        ```
     """
 
     def __init__(self, output_file_path: Any) -> None:
@@ -32,8 +33,9 @@ class GamepadRecorder(ABC_CSVRecorder):
     def record(self) -> None:
         """Record data to the output file until Keyboard interrupt or shutdown.
 
-        You can quit the recording by pressing Ctrl+C or setting `self._shutdown` to True. If recording process does not
-        terminate in background process, please move some button or stick for passing `get_gamepad()` function.
+        You can quit the recording by pressing Ctrl+C or `self.shutdown()`(setting `self._shutdown` to True). If
+        recording process does not terminate in background process, please move some button or stick for passing
+        `get_gamepad()` function.
         """
 
         with open(self.output_file_path, "a", newline="") as csvfile:
