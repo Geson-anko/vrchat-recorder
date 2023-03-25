@@ -1,7 +1,8 @@
-import obsws_python as obs
-import time
 import os
 import pprint
+import time
+
+import obsws_python as obs
 
 host = "localhost"
 port = 4444

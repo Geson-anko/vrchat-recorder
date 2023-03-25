@@ -1,13 +1,14 @@
+import time
+
 import pygame
 import pyvjoy
-import time
 
 # Initialize pygame
 pygame.init()
 
 # Set up the display
 screen = pygame.display.set_mode((800, 600))
-pygame.display.set_caption('Keyboard to Controller Stick Emulation')
+pygame.display.set_caption("Keyboard to Controller Stick Emulation")
 
 # Set up the virtual controller
 vjoy_device = pyvjoy.VJoyDevice(1)
@@ -34,7 +35,7 @@ while running:
         x = 1
 
     # Normalize the stick input
-    magnitude = (x ** 2 + y ** 2) ** 0.5
+    magnitude = (x**2 + y**2) ** 0.5
     if magnitude > 1:
         x /= magnitude
         y /= magnitude

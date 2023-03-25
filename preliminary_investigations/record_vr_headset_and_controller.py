@@ -1,12 +1,15 @@
-import openvr
 import time
+
 import numpy as np
+import openvr
 from scipy.spatial.transform import Rotation
+
 
 def convert_matrix34_to_matrix44(matrix34):
     matrix44 = np.eye(4, dtype=np.float32)
     matrix44[:3, :] = matrix34
     return matrix44
+
 
 # Initialize OpenVR
 openvr.init(openvr.VRApplication_Background)
