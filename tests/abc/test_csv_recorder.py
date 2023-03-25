@@ -26,6 +26,7 @@ def test_CSVRecorder(caplog: pytest.LogCaptureFixture):
         recorder = TestCSVRecorderImpl(output_file, csv_headers=headers)
         assert recorder.output_file_path == output_file
         assert recorder._shutdown is False
+        assert recorder.csv_headers == headers
 
         assert output_file.exists()
 
