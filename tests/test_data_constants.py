@@ -13,6 +13,7 @@ def test_CSVHeaderNames():
     assert CSVHeaderNames.PARAMETER_NAME == "parameter_name"
     assert CSVHeaderNames.DATA_TYPE == "data_type"
     assert CSVHeaderNames.VALUE == "value"
+    assert CSVHeaderNames.EVENT_TYPE == "event_type"
 
 
 def test_FileExtensions():
