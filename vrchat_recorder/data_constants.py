@@ -1,4 +1,5 @@
 """This class contains all the data constants used in the program."""
+from typing import Any
 
 
 class CSVHeaderNames:
@@ -17,3 +18,33 @@ class FileExtensions:
     CSV = "csv"
     OSCFEEDBACK = "oscfb"
     CONTROLLER = "ctrlr"
+
+
+class DataTypeNames:
+    """This class contains all data type names used in the recording."""
+
+    FLOAT = "float"
+    INT = "int"
+    BOOL = "bool"
+    STRING = "str"
+
+
+def get_data_type_name(obj: Any) -> str:
+    """Get the data type name of the given object.
+
+    Args:
+        obj (Any): The object.
+
+    Returns:
+        str: The data type name of the given object.
+    """
+    if isinstance(obj, float):
+        return DataTypeNames.FLOAT
+    elif isinstance(obj, bool):
+        return DataTypeNames.BOOL
+    elif isinstance(obj, int):
+        return DataTypeNames.INT
+    elif isinstance(obj, str):
+        return DataTypeNames.STRING
+    else:
+        return str(type(obj))
