@@ -59,6 +59,7 @@ class OSCFeedbackRecorder(ABC_CSVRecorder):
             dispatcher = Dispatcher()
             dispatcher.map(self.address, self._osc_callback)
             server = osc_server.ThreadingOSCUDPServer((self.host, self.port), dispatcher)
+            server.timeout = self.timeout
             try:
                 while self._shutdown is False:
                     server.handle_request()
