@@ -56,13 +56,13 @@ def test_CSVRecorder(caplog: pytest.LogCaptureFixture):
         assert isinstance(recorder.backgroud_thread, threading.Thread)
 
         # Test logger info when background recording starts
-        assert "Started background recording" in caplog.text
+        assert "Started background recording." in caplog.text
 
         recorder.shutdown()
         assert recorder._shutdown is True
 
         # Test logger info when background recording is shut down
-        assert "Shutdown background recording" in caplog.text
+        assert "Shutdown background recording." in caplog.text
 
         with open(output_file) as f:
             reader = csv.reader(f)
