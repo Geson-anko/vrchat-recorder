@@ -1,5 +1,7 @@
 from typing import Any
 
+import inputs
+
 confirm_about_obs_prompt = """\
 確認: OBS
 1. OBSはインストールされ、起動していますか？
@@ -17,6 +19,14 @@ confirm_about_vrchat_prompt = """\
 3. VRChat OSC機能は有効化されていますか？
 4. VRChatのOSCの受信をするためのサーバIP:PORTは `{0}:{1}` ですか？
 5. OSCのAddressは `{2}` で正しいですか？
+"""
+
+confirm_about_controller_prompt = """\
+確認: コントローラ
+1. Gamepadは接続されていますか？
+2. 現在表示しているデバイス一覧にあなたのGamepadは表示されていますか？
+デバイス一覧:
+{0}
 """
 
 
@@ -40,4 +50,11 @@ def confirm_about_vrchat(VRCHAT_OSC_IP: Any, VRCHAT_OSC_PORT: int, OSC_ADDRESS: 
         OSC_ADDRESS (str): OSC address.
     """
     print(confirm_about_vrchat_prompt.format(VRCHAT_OSC_IP, VRCHAT_OSC_PORT, OSC_ADDRESS), end="")
+    input()
+
+
+def confirm_about_controller() -> None:
+    """Confirm about controller."""
+    controller_names = "\n".join([f"{i}: {controller.name}" for i, controller in enumerate(inputs.devices.gamepads)])
+    print(confirm_about_controller_prompt.format(controller_names), end="")
     input()
