@@ -17,6 +17,7 @@ class BaseRecorder(ABC):
 
     _shutdown: bool = False
     backgroud_thread: Optional[threading.Thread] = None
+    backgroud_thread_timeout: float = 0.1
 
     @abstractmethod
     def record(self):
@@ -42,5 +43,5 @@ class BaseRecorder(ABC):
 
         self._shutdown = True
         if self.backgroud_thread is not None:
-            self.backgroud_thread.join()
+            self.backgroud_thread.join(self.backgroud_thread_timeout)
             logger.debug("Shutdown background recording.")
