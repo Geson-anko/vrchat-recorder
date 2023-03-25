@@ -21,6 +21,8 @@ def test_FileExtensions():
     assert FileExtensions.CSV == "csv"
     assert FileExtensions.OSCFEEDBACK == "oscfb"
     assert FileExtensions.CONTROLLER == "ctrlr"
+    assert FileExtensions.VIDEO == "video"
+    assert FileExtensions.GAMEPAD == "gamepad"
 
 
 def test_DataTypeNames():

@@ -19,6 +19,8 @@ class FileExtensions:
     CSV = "csv"
     OSCFEEDBACK = "oscfb"
     CONTROLLER = "ctrlr"
+    VIDEO = "video"
+    GAMEPAD = "gamepad"
 
 
 class DataTypeNames:
