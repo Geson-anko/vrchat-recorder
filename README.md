@@ -55,7 +55,7 @@ python -m vrchat-recorder -d <directory>
 - ゲームパッドの入力データ
 
   ゲームパッドの入力データをCSV形式で記録します。
-  ファイルは`.vrcrec/<YYYY-MM-DD-hh-mm-ss-millisec>.<controller_name>.<gamepad name>.gamepad.csv`に保存されます。ファイル名に含まれる時刻はディレクトリの時刻と少しだけずれる事があります。
+  ファイルは`.vrcrec/<YYYY-MM-DD-hh-mm-ss-millisec>.<gamepad name>.gamepad.csv`に保存されます。ファイル名に含まれる時刻はディレクトリの時刻と少しだけずれる事があります。
 
   フォーマットは次のようなCSVです。
 
