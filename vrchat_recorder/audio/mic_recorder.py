@@ -19,7 +19,7 @@ class MicRecorder(AudioRecorder):
         If mic_device_name is None, the default microphone will be used.
         Args:
             output_file_path_with_date_format (str): The path to the output file with date format.
-            mic_device_name (str): The name of the microphone device to record. You can know the name from `sc.all_microphones.
+            mic_device_name (str): The name of the microphone device to record. You can know the name from `sc.all_microphones`.
             kwds (Any): The keyword arguments for AudioRecorder.
         """
 
