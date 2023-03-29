@@ -8,6 +8,7 @@ from vrchat_recorder.vr.tracking_data_holders import (
     Position,
     TrackingData,
     VRDeviceTrackingDataHolder,
+    create_empty_data_holder,
 )
 
 
@@ -119,3 +120,50 @@ def test_vr_data_holder_class():
     assert vr.controller.right.second_trigger == st2
     assert vr.controller.right.third_trigger == tt2
     assert vr.controller.right.fourth_trigger == ft22
+
+
+def test_create_empty_data_holder():
+    empty_data_holder = create_empty_data_holder()
+
+    assert empty_data_holder.timestamp == 0.0
+    assert empty_data_holder.hmd.position.x == 0.0
+    assert empty_data_holder.hmd.position.y == 0.0
+    assert empty_data_holder.hmd.position.z == 0.0
+    assert empty_data_holder.hmd.orientation.x == 0.0
+    assert empty_data_holder.hmd.orientation.y == 0.0
+    assert empty_data_holder.hmd.orientation.z == 0.0
+    assert empty_data_holder.hmd.orientation.w == 0.0
+    assert empty_data_holder.controller.left.position.x == 0.0
+    assert empty_data_holder.controller.left.position.y == 0.0
+    assert empty_data_holder.controller.left.position.z == 0.0
+    assert empty_data_holder.controller.left.orientation.x == 0.0
+    assert empty_data_holder.controller.left.orientation.y == 0.0
+    assert empty_data_holder.controller.left.orientation.z == 0.0
+    assert empty_data_holder.controller.left.orientation.w == 0.0
+    assert empty_data_holder.controller.left.thumb_stick.x == 0.0
+    assert empty_data_holder.controller.left.thumb_stick.y == 0.0
+    assert empty_data_holder.controller.left.first_trigger.x == 0.0
+    assert empty_data_holder.controller.left.first_trigger.y == 0.0
+    assert empty_data_holder.controller.left.second_trigger.x == 0.0
+    assert empty_data_holder.controller.left.second_trigger.y == 0.0
+    assert empty_data_holder.controller.left.third_trigger.x == 0.0
+    assert empty_data_holder.controller.left.third_trigger.y == 0.0
+    assert empty_data_holder.controller.left.fourth_trigger.x == 0.0
+    assert empty_data_holder.controller.left.fourth_trigger.y == 0.0
+    assert empty_data_holder.controller.right.position.x == 0.0
+    assert empty_data_holder.controller.right.position.y == 0.0
+    assert empty_data_holder.controller.right.position.z == 0.0
+    assert empty_data_holder.controller.right.orientation.x == 0.0
+    assert empty_data_holder.controller.right.orientation.y == 0.0
+    assert empty_data_holder.controller.right.orientation.z == 0.0
+    assert empty_data_holder.controller.right.orientation.w == 0.0
+    assert empty_data_holder.controller.right.thumb_stick.x == 0.0
+    assert empty_data_holder.controller.right.thumb_stick.y == 0.0
+    assert empty_data_holder.controller.right.first_trigger.x == 0.0
+    assert empty_data_holder.controller.right.first_trigger.y == 0.0
+    assert empty_data_holder.controller.right.second_trigger.x == 0.0
+    assert empty_data_holder.controller.right.second_trigger.y == 0.0
+    assert empty_data_holder.controller.right.third_trigger.x == 0.0
+    assert empty_data_holder.controller.right.third_trigger.y == 0.0
+    assert empty_data_holder.controller.right.fourth_trigger.x == 0.0
+    assert empty_data_holder.controller.right.fourth_trigger.y == 0.0
