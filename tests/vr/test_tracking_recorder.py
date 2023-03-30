@@ -65,7 +65,7 @@ def test_write_binary_data(tracking_recorder: TrackingRecorder, tmp_path):
     assert test_file.stat().st_size == len(holder_to_binary(create_empty_data_holder()))
 
 
-def test_record(tracking_recorder: TrackingRecorder, mocker: MockerFixture, tmp_path):
+def test_record(caplog: pytest.LogCaptureFixture, tracking_recorder: TrackingRecorder, mocker: MockerFixture, tmp_path):
     test_file = tmp_path / "test_output.bin"
     tracking_recorder.output_file_path = str(test_file)
 
@@ -74,12 +74,16 @@ def test_record(tracking_recorder: TrackingRecorder, mocker: MockerFixture, tmp_
     tracking_recorder._update_data_holder = mocker.spy(tracking_recorder, "_update_data_holder")
     tracking_recorder._write_binary_data = mocker.spy(tracking_recorder, "_write_binary_data")
 
-    tracking_recorder.record_background()
-    time.sleep(0.1)
+    with caplog.at_level("DEBUG"):
+        tracking_recorder.record_background()
+        time.sleep(0.1)
 
-    tracking_recorder.shutdown()  # to stop recording immediately
+        tracking_recorder.shutdown()  # to stop recording immediately
 
     tracking_recorder._update_timestamp.assert_called()
     tracking_recorder._get_device_poses.assert_called()
     tracking_recorder._update_data_holder.assert_called()
     tracking_recorder._write_binary_data.assert_called()
+
+    assert f"VR Tracking Recorder started. Output to {tracking_recorder.output_file_path}" in caplog.messages
+    assert "VR Tracking Recorder stopped." in caplog.messages
