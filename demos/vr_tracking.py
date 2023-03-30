@@ -26,6 +26,8 @@ import time
 
 import openvr
 
+from vrchat_recorder.vr.tracking_data_holders import VRDeviceTrackingDataHolder
+from vrchat_recorder.vr.tracking_reader import TrackingReader
 from vrchat_recorder.vr.tracking_recorder import TrackingRecorder
 
 openvr.init(openvr.VRApplication_Background)
@@ -35,10 +37,8 @@ tr = TrackingRecorder("demo.bin", vrsystem, frame_rate=60)
 tr.record_background()
 
 
-try:
-    while True:
-        holder = copy.deepcopy(tr._holder)
-        text = f"""\
+def make_display_text(holder: VRDeviceTrackingDataHolder) -> str:
+    return f"""\
 ---
 timestamp: {holder.timestamp}
 HMD position: {holder.hmd.position}
@@ -56,6 +56,14 @@ Controller right thumb stick: {holder.controller.right.thumb_stick}
 Controller right first trigger: {holder.controller.right.first_trigger}
 Controller right second trigger: {holder.controller.right.second_trigger}
 """
+
+
+try:
+    while True:
+        holder = copy.deepcopy(tr._holder)
+
+        text = make_display_text(holder)
+        text = f"Recording... Press Ctrl+C to quit.\n{text}"
         os.system("cls" if os.name == "nt" else "clear")  # Clear console
         print(text, end="\r")
         time.sleep(0.001)
@@ -63,6 +71,23 @@ except KeyboardInterrupt:
     pass
 
 tr.shutdown()
+time.sleep(0.5)
+
+reader = TrackingReader("demo.bin")
+try:
+    for i in range(reader.num_frames):
+        holder = reader.read()
+        if holder is None:
+            print("EOF")
+            break
+
+        text = make_display_text(holder)
+        text = f"Reading... {i + 1}/{reader.num_frames}. Press Ctrl+C to quit.\n{text}"
+        os.system("cls" if os.name == "nt" else "clear")  # Clear console
+        print(text, end="\r")
+        time.sleep(0.001)
+except KeyboardInterrupt:
+    pass
 
 file_stats = os.stat("demo.bin")
 
