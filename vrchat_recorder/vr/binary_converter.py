@@ -1,6 +1,6 @@
 """This file contains features that converts DataHolder class to binary data."""
-
 import struct
+from typing import Optional
 
 from .tracking_data_holders import VRDeviceTrackingDataHolder, create_empty_data_holder
 
@@ -88,18 +88,22 @@ def holder_to_binary(holder: VRDeviceTrackingDataHolder) -> bytes:
     return struct.pack(binary_format, *data)
 
 
-def binary_to_holder(binary: bytes) -> VRDeviceTrackingDataHolder:
+def binary_to_holder(binary: bytes, dst: Optional[VRDeviceTrackingDataHolder] = None) -> VRDeviceTrackingDataHolder:
     """Converts binary data to DataHolder class.
 
     Args:
         binary (bytes): Binary data. Format is defined in `binary_format` variable.
+        dst (Optional[VRDeviceTrackingDataHolder], optional): Destination DataHolder class. Defaults to None.
 
     Returns:
         VRDeviceTrackingDataHolder: DataHolder class.
     """
 
     binary = struct.unpack(binary_format, binary)
-    holder = create_empty_data_holder()
+    if dst is None:
+        holder = create_empty_data_holder()
+    else:
+        holder = dst
 
     holder.timestamp = binary[0]
 
