@@ -89,6 +89,7 @@ def test_record(caplog: pytest.LogCaptureFixture, tracking_recorder: TrackingRec
     test_file = tmp_path / "test_output.bin"
     tracking_recorder.output_file_path = str(test_file)
 
+    tracking_recorder._write_header = mocker.spy(tracking_recorder, "_write_header")
     tracking_recorder._update_timestamp = mocker.spy(tracking_recorder, "_update_timestamp")
     tracking_recorder._get_device_poses = mocker.spy(tracking_recorder, "_get_device_poses")
     tracking_recorder._update_data_holder = mocker.spy(tracking_recorder, "_update_data_holder")
@@ -100,6 +101,7 @@ def test_record(caplog: pytest.LogCaptureFixture, tracking_recorder: TrackingRec
 
         tracking_recorder.shutdown()  # to stop recording immediately
 
+    tracking_recorder._write_header.assert_called_once()
     tracking_recorder._update_timestamp.assert_called()
     tracking_recorder._get_device_poses.assert_called()
     tracking_recorder._update_data_holder.assert_called()

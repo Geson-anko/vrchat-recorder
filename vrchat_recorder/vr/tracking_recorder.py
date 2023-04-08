@@ -129,7 +129,8 @@ class TrackingRecorder(BaseRecorder):
                         self._holder.controller.right.third_trigger = Axis(state.rAxis[3].x, state.rAxis[3].y)
                         self._holder.controller.right.fourth_trigger = Axis(state.rAxis[4].x, state.rAxis[4].y)
 
-    def _write_header(self, outfile: BinaryIO) -> None:
+    @staticmethod
+    def _write_header(outfile: BinaryIO) -> None:
         """Write the header to the output file.
 
         Args:
@@ -173,6 +174,8 @@ class TrackingRecorder(BaseRecorder):
 
         try:
             with open(self.output_file_path, "wb") as outfile:
+
+                self._write_header(outfile)
 
                 while self._shutdown is False:
 
