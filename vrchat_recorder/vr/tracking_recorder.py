@@ -1,5 +1,6 @@
 """This file contains TrackingRecorder class that records vr tracking data continuously."""
 
+import json
 import logging
 import time
 from typing import BinaryIO, List
@@ -10,6 +11,7 @@ from scipy.spatial.transform import Rotation
 
 from ..abc.base_recorder import BaseRecorder
 from .binary_converter import binary_format, holder_to_binary
+from .constants import HeaderNames, HeaderVersions
 from .tracking_data_holders import Axis, Orientation, Position, create_empty_data_holder
 
 logger = logging.getLogger(__name__)
@@ -36,6 +38,9 @@ class TrackingRecorder(BaseRecorder):
         - controller triggers (first to fourth).
 
     You can see binary format in `vrchat_recorder.vr.binary_converter.binary_format`.
+
+    Header is written at the beginning of the file, and json format is used.
+    Structure of the header is can be seen `create_header` function.
     """
 
     def __init__(
@@ -124,6 +129,17 @@ class TrackingRecorder(BaseRecorder):
                         self._holder.controller.right.third_trigger = Axis(state.rAxis[3].x, state.rAxis[3].y)
                         self._holder.controller.right.fourth_trigger = Axis(state.rAxis[4].x, state.rAxis[4].y)
 
+    def _write_header(self, outfile: BinaryIO) -> None:
+        """Write the header to the output file.
+
+        Args:
+            outfile (BinaryIO): The output file to write the header to.
+        """
+        header = create_header()
+        header_size = len(header)
+        outfile.write(header_size.to_bytes(4, byteorder="little"))
+        outfile.write(header)
+
     def _write_binary_data(self, outfile: BinaryIO, frame_count: int) -> int:
         """Write the binary data to the output file and update the frame count.
 
@@ -157,6 +173,7 @@ class TrackingRecorder(BaseRecorder):
 
         try:
             with open(self.output_file_path, "wb") as outfile:
+
                 while self._shutdown is False:
 
                     if (time.time() - self._holder.timestamp) < (1 / self.frame_rate):
@@ -171,3 +188,18 @@ class TrackingRecorder(BaseRecorder):
             pass
 
         logger.info("VR Tracking Recorder stopped.")
+
+
+def create_header() -> bytes:
+    """Create the header for the output file.
+
+    Returns:
+        bytes: The header.
+    """
+
+    header = {
+        HeaderNames.VERSION: HeaderVersions.V0,
+        HeaderNames.BINARY_FORMAT: binary_format,
+    }
+
+    return json.dumps(header).encode("utf-8")

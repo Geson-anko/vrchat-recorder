@@ -1,3 +1,4 @@
+import json
 import time
 from unittest.mock import MagicMock
 
@@ -7,12 +8,17 @@ import pytest
 from pytest_mock import MockerFixture
 
 from vrchat_recorder.vr.binary_converter import holder_to_binary
+from vrchat_recorder.vr.constants import HeaderNames, HeaderVersions
 from vrchat_recorder.vr.tracking_data_holders import (
     Orientation,
     Position,
     create_empty_data_holder,
 )
-from vrchat_recorder.vr.tracking_recorder import TrackingRecorder
+from vrchat_recorder.vr.tracking_recorder import (
+    TrackingRecorder,
+    binary_format,
+    create_header,
+)
 
 
 @pytest.fixture
@@ -52,6 +58,20 @@ def test_update_data_holder(tracking_recorder, mock_vrsystem):
     assert isinstance(tracking_recorder._holder.hmd.orientation, Orientation)
 
 
+def test_write_header(tracking_recorder: TrackingRecorder, tmp_path):
+    test_file = tmp_path / "test_output_write_header.bin"
+    tracking_recorder.output_file_path = str(test_file)
+
+    header = create_header()
+    with test_file.open("wb") as outfile:
+        tracking_recorder._write_header(outfile)
+
+    with test_file.open("rb") as outfile:
+        header_size = int.from_bytes(outfile.read(4), "little")
+        assert header_size == len(header)
+        assert outfile.read(header_size) == header
+
+
 def test_write_binary_data(tracking_recorder: TrackingRecorder, tmp_path):
     test_file = tmp_path / "test_output.bin"
     tracking_recorder.output_file_path = str(test_file)
@@ -87,3 +107,13 @@ def test_record(caplog: pytest.LogCaptureFixture, tracking_recorder: TrackingRec
 
     assert f"VR Tracking Recorder started. Output to {tracking_recorder.output_file_path}" in caplog.messages
     assert "VR Tracking Recorder stopped." in caplog.messages
+
+
+def test_create_header():
+    header = create_header()
+
+    assert isinstance(header, bytes)
+
+    header_dict = json.loads(header.decode("utf-8"))
+    assert header_dict[HeaderNames.VERSION] == HeaderVersions.V0
+    assert header_dict[HeaderNames.BINARY_FORMAT] == binary_format
