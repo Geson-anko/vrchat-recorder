@@ -23,6 +23,7 @@ Controller right second trigger: Axis(x=0.0, y=0.0)
 import copy
 import os
 import time
+from pathlib import Path
 
 import openvr
 
@@ -33,7 +34,9 @@ from vrchat_recorder.vr.tracking_recorder import TrackingRecorder
 openvr.init(openvr.VRApplication_Background)
 vrsystem = openvr.VRSystem()
 
-tr = TrackingRecorder("demo.bin", vrsystem, frame_rate=60)
+output_file_path = Path(__file__).parent / "output" / "demo_vr_tracking.bin"
+
+tr = TrackingRecorder(output_file_path, vrsystem, frame_rate=60)
 tr.record_background()
 
 
@@ -73,7 +76,7 @@ except KeyboardInterrupt:
 tr.shutdown()
 time.sleep(0.5)
 
-reader = TrackingReader("demo.bin")
+reader = TrackingReader(output_file_path)
 try:
     for i in range(reader.num_frames):
         holder = reader.read()
@@ -89,6 +92,6 @@ try:
 except KeyboardInterrupt:
     pass
 
-file_stats = os.stat("demo.bin")
+file_stats = os.stat(output_file_path)
 
 print(f"File size: {file_stats.st_size} bytes")
