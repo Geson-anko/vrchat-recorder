@@ -158,13 +158,14 @@ class TrackingRecorder(BaseRecorder):
         try:
             with open(self.output_file_path, "wb") as outfile:
                 while self._shutdown is False:
+
+                    if (time.time() - self._holder.timestamp) < (1 / self.frame_rate):
+                        time.sleep(1 / self.frame_rate - (time.time() - self._holder.timestamp))
+
                     self._update_timestamp()
                     device_poses = self._get_device_poses()
                     self._update_data_holder(device_poses)
                     frame_count = self._write_binary_data(outfile, frame_count)
-
-                    if (time.time() - self._holder.timestamp) < (1 / self.frame_rate):
-                        time.sleep(1 / self.frame_rate - (time.time() - self._holder.timestamp))
 
         except KeyboardInterrupt:
             pass
