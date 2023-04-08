@@ -7,15 +7,18 @@ from vrchat_recorder.vr.tracking_data_holders import (
     create_empty_data_holder,
 )
 from vrchat_recorder.vr.tracking_reader import TrackingReader
+from vrchat_recorder.vr.tracking_recorder import TrackingRecorder
 
 
 @pytest.fixture
 def test_file(tmp_path):
     test_file = tmp_path / "test_input.bin"
+
     holder = create_empty_data_holder()
     binary = holder_to_binary(holder)
 
     with test_file.open("wb") as f:
+        TrackingRecorder._write_header(f)
         f.write(binary)
 
     return test_file
@@ -32,10 +35,16 @@ def test_init(tracking_reader: TrackingReader, test_file):
     assert tracking_reader.read_count == 0
 
 
+def test_get_header(tracking_reader: TrackingReader):
+    header_size, header = tracking_reader.get_header()
+    assert isinstance(header_size, int)
+    assert isinstance(header, dict)
+
+
 def test_reset(tracking_reader: TrackingReader):
     tracking_reader._file.seek(10)
     tracking_reader.reset()
-    assert tracking_reader._file.tell() == 0
+    assert tracking_reader._file.tell() == tracking_reader._header_size_with_initial
 
 
 def test_read(tracking_reader: TrackingReader):

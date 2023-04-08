@@ -1,9 +1,11 @@
 """This file contains TrackingReader class that reads vr tracking data."""
 
+import json
 import struct
 from typing import Optional
 
-from .binary_converter import binary_format, binary_to_holder
+from .binary_converter import binary_to_holder
+from .constants import HeaderNames, HeaderVersions
 from .tracking_data_holders import VRDeviceTrackingDataHolder
 
 
@@ -30,8 +32,18 @@ class TrackingReader:
         """
         self.input_file_path = input_file_path
         self._file = open(input_file_path, "rb")
+        header_size, header = self.get_header()
+        if header[HeaderNames.VERSION] != HeaderVersions.V0:
+            raise ValueError("Invalid header version.")
+
+        binary_format = header[HeaderNames.BINARY_FORMAT]
+
+        self._binary_format = binary_format
+        self._header_size = header_size
+        self._header_size_with_initial = header_size + 4
+
         self._binary_size = struct.calcsize(binary_format)
-        self._num_frames = self._file.seek(0, 2) // self._binary_size
+        self._num_frames = (self._file.seek(0, 2) - self._header_size_with_initial) // self._binary_size
         self._count = 0
 
         self.reset()
@@ -46,9 +58,22 @@ class TrackingReader:
         """Returns the number of frames read."""
         return self._count
 
+    def get_header(self) -> tuple[int, dict]:
+        """Get header information from file.
+
+        Returns:
+            int: Header size.
+            dict: Header information.
+        """
+
+        self._file.seek(0)
+        header_size = int.from_bytes(self._file.read(4), "little")
+        header = json.loads(self._file.read(header_size).decode("utf-8"))
+        return header_size, header
+
     def reset(self):
         """Resets file pointer to the beginning of the file."""
-        self._file.seek(0)
+        self._file.seek(self._header_size_with_initial)
         self._count = 0
 
     def read(self) -> Optional[VRDeviceTrackingDataHolder]:
