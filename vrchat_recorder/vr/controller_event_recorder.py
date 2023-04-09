@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 class ControllerEventRecorder(CSVRecorder):
-    """ControllerEventRecorder records controller events.
+    """ControllerEventRecorder records controller button events.
 
     Usage:
         ```python
@@ -24,6 +24,13 @@ class ControllerEventRecorder(CSVRecorder):
         er = ControllerEventRecorder("path/to/file.csv", vrsystem)
         er.record()
         ```
+
+    CSV Header and description of data:
+        - timestamp (float): Timestamp of the event. (seconds)
+        - event_type (int): Type of the event. See `EVREventType` of OpenVR API (openvr.h).
+        - controller_role (int): Role of the controller. Left is 1, right is 2.
+        - button_id (int): ID of the button. See `EVRButtonId` of OpenVR API (openvr.h).
+        - age_seconds (float): Age of the event. (seconds)
     """
 
     def __init__(
