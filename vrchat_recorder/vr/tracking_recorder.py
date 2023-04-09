@@ -41,6 +41,8 @@ class TrackingRecorder(BaseRecorder):
 
     Header is written at the beginning of the file, and json format is used.
     Structure of the header is can be seen `create_header` function.
+
+    You can read the data with `TrackingReader` class.
     """
 
     def __init__(
