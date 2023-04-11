@@ -39,6 +39,16 @@ confirm_about_mic_prompt = """\
 {3}
 """
 
+confirm_about_speaker_prompt = """\
+確認: スピーカー
+選択されたスピーカーのデバイス名は `{0}` で正しいですか？
+サンプリングレートは `{1}` で正しいですか？
+チャネル数は `{2}` で正しいですか？
+正しくない場合は次のデバイスリストから正しい名前を指定してください。
+スピーカーはループバックデバイスとして録音されます。
+{3}
+"""
+
 
 def confirm_about_obs(OBS_WEBSOCKET_IP: Any, OBS_WEBSOCKET_PORT: int) -> None:
     """Confirm about OBS.
@@ -80,4 +90,22 @@ def confirm_about_mic(mic_name: str, mic_sampling_rate: int, mic_channels: int) 
     """
     mic_names = "\n".join([f"{i}: {mic.name}" for i, mic in enumerate(sc.all_microphones())])
     print(confirm_about_mic_prompt.format(mic_name, mic_sampling_rate, mic_channels, mic_names), end="")
+    input()
+
+
+def confirm_about_speaker(speaker_name: str, speaker_sampling_rate: int, speaker_channels: int) -> None:
+    """Confirm about speaker.
+
+    Args:
+        speaker_name (str): Speaker name.
+        speaker_sampling_rate (int): Speaker sampling rate.
+        speaker_channels (int): Speaker channels.
+    """
+    speaker_names = "\n".join(
+        [f"{i}: {speaker.name}" for i, speaker in enumerate(sc.all_microphones(include_loopback=True))]
+    )
+    print(
+        confirm_about_speaker_prompt.format(speaker_name, speaker_sampling_rate, speaker_channels, speaker_names),
+        end="",
+    )
     input()

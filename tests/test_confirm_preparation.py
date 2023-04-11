@@ -68,3 +68,22 @@ def test_confirm_about_mic(mocker: MockerFixture) -> None:
 
     # Check if the soundcard.all_microphones function was called
     mock_soundcard.assert_called_once()
+
+
+def test_confirm_about_speaker(mocker: MockerFixture) -> None:
+    # Mock the functions
+    mock_input = mocker.patch("builtins.input", return_value="")
+    mock_print = mocker.patch("builtins.print")
+    mock_soundcard = mocker.patch("soundcard.all_microphones", return_value=[])
+
+    # Call the confirm_about_speaker function
+    mod.confirm_about_speaker("Speaker", 48000, 2)
+
+    # Check if the print function was called with the correct arguments
+    mock_print.assert_called_once_with(mod.confirm_about_speaker_prompt.format("Speaker", 48000, 2, ""), end="")
+
+    # Check if the input function was called
+    mock_input.assert_called_once()
+
+    # Check if the soundcard.all_microphones function was called
+    mock_soundcard.assert_called_once_with(include_loopback=True)
