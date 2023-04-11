@@ -18,6 +18,8 @@ scipy = "^1.10.1"
 obs-websocket-py = "^1.0"
 obsws-python = "^1.4.2"
 python-osc = "^1.8.1"
+soundcard = "^0.4.2"
+soundfile = "^0.12.1"
 
 
 [tool.poetry.group.dev.dependencies]
