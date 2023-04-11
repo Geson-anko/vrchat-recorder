@@ -1,0 +1,3 @@
+# Ignore Outputs from demo.
+*
+!.gitignore
