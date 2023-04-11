@@ -24,7 +24,8 @@ class TrackingRecorder(BaseRecorder):
         ```python
         from vrchat_recorder.vr.tracking_recorder import TrackingRecorder
 
-        tr = TrackingRecorder("path/to/file.bin", frame_rate=60)
+        vrsystem = openvr.init(openvr.VRApplication_Background)
+        tr = TrackingRecorder("path/to/file.bin", vrsystem, frame_rate=60)
         tr.record()
         ```
 
