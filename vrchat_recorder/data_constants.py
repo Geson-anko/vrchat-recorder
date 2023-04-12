@@ -24,6 +24,9 @@ class FileExtensions:
     CONTROLLER = "ctrlr"
     VIDEO = "video"
     GAMEPAD = "gamepad"
+    WAV = "wav"
+    MICROPHONE = "mic"
+    SPEAKER = "speaker"
 
 
 class DataTypeNames:

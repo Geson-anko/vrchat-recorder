@@ -23,6 +23,9 @@ def test_FileExtensions():
     assert FileExtensions.CONTROLLER == "ctrlr"
     assert FileExtensions.VIDEO == "video"
     assert FileExtensions.GAMEPAD == "gamepad"
+    assert FileExtensions.WAV == "wav"
+    assert FileExtensions.MICROPHONE == "mic"
+    assert FileExtensions.SPEAKER == "speaker"
 
 
 def test_DataTypeNames():
