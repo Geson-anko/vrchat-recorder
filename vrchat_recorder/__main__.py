@@ -6,10 +6,12 @@ import sys
 import time
 
 import inputs
+import soundcard as sc
 
 from . import confirm_preparation as confirm
 from . import name_utils
 from .argument_parser import get_parser
+from .audio import MicRecorder, SpeakerRecorder
 from .date_utils import get_now_str
 from .gamepad_recorder import GamepadRecorder
 from .obs_video_recorder import OBSVideoRecorder
@@ -48,9 +50,27 @@ def main(arg_list=None):
     obs_websocket_port = args.obs_websocket_port
     obs_websocket_password = args.obs_websocket_password
 
+    mic_device_name = args.mic_device_name if args.mic_device_name is not None else sc.default_microphone().name
+    mic_sample_rate = args.mic_sample_rate
+    mic_block_size = args.mic_block_size
+    mic_channels = args.mic_channels
+    mic_flush_interval = args.mic_flush_interval
+    mic_subtype = args.mic_subtype
+
+    speaker_device_name = (
+        args.speaker_device_name if args.speaker_device_name is not None else sc.default_speaker().name
+    )
+    speaker_sample_rate = args.speaker_sample_rate
+    speaker_block_size = args.speaker_block_size
+    speaker_channels = args.speaker_channels
+    speaker_flush_interval = args.speaker_flush_interval
+    speaker_subtype = args.speaker_subtype
+
     no_osc_feedback = args.no_osc_feedback
     no_gamepad = args.no_gamepad
     no_obs = args.no_obs
+    no_mic = args.no_mic
+    no_speaker = args.no_speaker
 
     if not no_ask:
         confirm.confirm_about_vrchat(vrchat_osc_ip, vrchat_osc_port, vrchat_osc_address)
@@ -58,6 +78,15 @@ def main(arg_list=None):
 
         if not no_gamepad:
             confirm.confirm_about_controller()
+
+        if not no_mic:
+            confirm.confirm_about_mic(mic_device_name, mic_sample_rate, mic_channels)
+
+        if not no_speaker:
+            confirm.confirm_about_speaker(speaker_device_name, speaker_sample_rate, speaker_channels)
+
+    else:
+        logger.info("Skipping confirmation.")
 
     vrcrec_dir_name = name_utils.get_vrcrec_dir_name(get_now_str(date_format))
     vrcrec_dir_path = os.path.join(output_dir, vrcrec_dir_name)
@@ -102,6 +131,45 @@ def main(arg_list=None):
         obs_video_recorder.record_background()
         logger.info(f"Start OBS Video Recording: {obs_video_output_path}")
         background_recorders.append(obs_video_recorder)
+
+    audio_dir_path = os.path.join(vrcrec_dir_path, "audio")
+    os.makedirs(audio_dir_path, exist_ok=True)
+
+    if not no_mic:
+        mic_file_name_with_datefmt = name_utils.get_mic_audio_file_name(
+            date_format
+        )  # Date is determined when the recording starts.
+        mic_output_path = os.path.join(audio_dir_path, mic_file_name_with_datefmt)
+        mic_recorder = MicRecorder(
+            mic_output_path,
+            mic_device_name,
+            sample_rate=mic_sample_rate,
+            num_channels=mic_channels,
+            block_size=mic_block_size,
+            num_blocks_per_write=mic_flush_interval,
+            subtype=mic_subtype,
+        )
+
+        mic_recorder.record_background()
+        logger.info(f"Start Mic Recording: {mic_output_path}")
+        background_recorders.append(mic_recorder)
+
+    if not no_speaker:
+        speaker_file_name_with_datefmt = name_utils.get_speaker_audio_file_name(date_format)
+        speaker_output_path = os.path.join(audio_dir_path, speaker_file_name_with_datefmt)
+        speaker_recorder = SpeakerRecorder(
+            speaker_output_path,
+            speaker_device_name,
+            sample_rate=speaker_sample_rate,
+            num_channels=speaker_channels,
+            block_size=speaker_block_size,
+            num_blocks_per_write=speaker_flush_interval,
+            subtype=speaker_subtype,
+        )
+
+        speaker_recorder.record_background()
+        logger.info(f"Start Speaker Recording: {speaker_output_path}")
+        background_recorders.append(speaker_recorder)
 
     logger.info("Press Ctrl+C to stop recording...")
 
