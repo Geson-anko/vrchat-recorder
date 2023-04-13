@@ -27,6 +27,9 @@ class FileExtensions:
     WAV = "wav"
     MICROPHONE = "mic"
     SPEAKER = "speaker"
+    EVENT = "event"
+    BINARY = "bin"
+    TRACKING = "tracking"
 
 
 class DataTypeNames:

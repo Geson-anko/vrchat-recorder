@@ -26,6 +26,9 @@ def test_FileExtensions():
     assert FileExtensions.WAV == "wav"
     assert FileExtensions.MICROPHONE == "mic"
     assert FileExtensions.SPEAKER == "speaker"
+    assert FileExtensions.EVENT == "event"
+    assert FileExtensions.BINARY == "bin"
+    assert FileExtensions.TRACKING == "tracking"
 
 
 def test_DataTypeNames():
