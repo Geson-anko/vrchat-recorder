@@ -96,6 +96,42 @@ python -m vrchat-recorder -d <directory>
 - `--obs_websocket_password <password>`:
   OBS StudioのWebsocketのパスワードを指定します。WebSocketServerの認証設定をしていない場合は指定する必要はありません。
 
+- `--mic_device_name <name>`, `--mic <name>`:
+  録音するマイクのデバイス名を指定します。デフォルトではデフォルトのマイクを使用します。
+
+- `mic_sample_rate <rate>`:
+  録音するマイクのサンプリングレートを指定します。デフォルトでは`44100`です。
+
+- `--mic_channels <channels>`:
+  録音するマイクのチャンネル数を指定します。デフォルトでは`1`です。
+
+- `--mic_block_size <size>`:
+  録音するマイクのブロック(チャンク)サイズを指定します。デフォルトでは`4096`です。
+
+- `--mic_flush_interval <interval>`:
+  ファイルへ一度にフラッシュするブロックの数です。デフォルトでは`100`です。
+
+- `--mic_subtype <subtype>`:
+  録音する音声ファイルのサブタイプを指定します。デフォルトでは`PCM_16`です。
+
+- `--speaker_device_name <name>`, `--speaker <name>`:
+  録音するスピーカーのデバイス名を指定します。デフォルトではデフォルトのスピーカーを使用します。
+
+- `--speaker_sample_rate <rate>`:
+  録音するスピーカーのサンプリングレートを指定します。デフォルトでは`44100`です。
+
+- `--speaker_channels <channels>`:
+  録音するスピーカーのチャンネル数を指定します。デフォルトでは`2`です。
+
+- `--speaker_block_size <size>`:
+  録音するスピーカーのブロック(チャンク)サイズを指定します。デフォルトでは`4096`です
+
+- `--speaker_flush_interval <interval>`:
+  ファイルへ一度にフラッシュするブロックの数です。デフォルトでは`100`です。
+
+- `--speaker_subtype <subtype>`:
+  録音する音声ファイルのサブタイプを指定します。デフォルトでは`PCM_16`です。
+
 - `--no_osc_feedback`:
   OSCフィードバックを記録しない場合は指定します。デフォルトでは記録します。
 
@@ -104,6 +140,12 @@ python -m vrchat-recorder -d <directory>
 
 - `--no_obs`:
   OBSを用いてプレイ映像および音声を録画しない場合は指定します。デフォルトでは記録します。
+
+- `--no_mic`:
+  マイクを用いて音声を録音しない場合は指定します。デフォルトでは記録します。
+
+- `--no_speaker`:
+  スピーカーを用いて音声を録音しない場合は指定します。デフォルトでは記録します。
 
 ## 開発途中
 
