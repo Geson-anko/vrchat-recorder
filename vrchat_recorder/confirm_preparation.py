@@ -49,6 +49,13 @@ confirm_about_speaker_prompt = """\
 {3}
 """
 
+confirm_about_vr_recording_prompt = """\
+確認: VR デバイスの記録
+1. VRモードでVRChatを起動していますか？
+2. ヘッドセットやコントローラーは接続されていますか？
+3. トラッキングデータを取得するFPSは `{0}` で正しいですか？
+"""
+
 
 def confirm_about_obs(OBS_WEBSOCKET_IP: Any, OBS_WEBSOCKET_PORT: int) -> None:
     """Confirm about OBS.
@@ -108,4 +115,14 @@ def confirm_about_speaker(speaker_name: str, speaker_sampling_rate: int, speaker
         confirm_about_speaker_prompt.format(speaker_name, speaker_sampling_rate, speaker_channels, speaker_names),
         end="",
     )
+    input()
+
+
+def confirm_about_vr_recording(fps: float) -> None:
+    """Confirm about VR recording.
+
+    Args:
+        fps (float): FPS.
+    """
+    print(confirm_about_vr_recording_prompt.format(fps), end="")
     input()
