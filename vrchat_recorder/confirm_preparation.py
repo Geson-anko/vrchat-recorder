@@ -1,6 +1,7 @@
 from typing import Any
 
 import inputs
+import soundcard as sc
 
 confirm_about_obs_prompt = """\
 確認: OBS
@@ -27,6 +28,25 @@ confirm_about_controller_prompt = """\
 2. 現在表示しているデバイス一覧にあなたのGamepadは表示されていますか？
 デバイス一覧:
 {0}
+"""
+
+confirm_about_mic_prompt = """\
+確認: マイク
+選択されたマイクのデバイス名は `{0}` で正しいですか？
+サンプリングレートは `{1}` で正しいですか？
+チャネル数は `{2}` で正しいですか？
+正しくない場合は次のデバイスリストから正しい名前を指定してください。
+{3}
+"""
+
+confirm_about_speaker_prompt = """\
+確認: スピーカー
+選択されたスピーカーのデバイス名は `{0}` で正しいですか？
+サンプリングレートは `{1}` で正しいですか？
+チャネル数は `{2}` で正しいですか？
+正しくない場合は次のデバイスリストから正しい名前を指定してください。
+スピーカーはループバックデバイスとして録音されます。
+{3}
 """
 
 
@@ -57,4 +77,35 @@ def confirm_about_controller() -> None:
     """Confirm about controller."""
     controller_names = "\n".join([f"{i}: {controller.name}" for i, controller in enumerate(inputs.devices.gamepads)])
     print(confirm_about_controller_prompt.format(controller_names), end="")
+    input()
+
+
+def confirm_about_mic(mic_name: str, mic_sampling_rate: int, mic_channels: int) -> None:
+    """Confirm about microphone.
+
+    Args:
+        mic_name (str): Microphone name.
+        mic_sampling_rate (int): Microphone sampling rate.
+        mic_channels (int): Microphone channels.
+    """
+    mic_names = "\n".join([f"{i}: {mic.name}" for i, mic in enumerate(sc.all_microphones())])
+    print(confirm_about_mic_prompt.format(mic_name, mic_sampling_rate, mic_channels, mic_names), end="")
+    input()
+
+
+def confirm_about_speaker(speaker_name: str, speaker_sampling_rate: int, speaker_channels: int) -> None:
+    """Confirm about speaker.
+
+    Args:
+        speaker_name (str): Speaker name.
+        speaker_sampling_rate (int): Speaker sampling rate.
+        speaker_channels (int): Speaker channels.
+    """
+    speaker_names = "\n".join(
+        [f"{i}: {speaker.name}" for i, speaker in enumerate(sc.all_microphones(include_loopback=True))]
+    )
+    print(
+        confirm_about_speaker_prompt.format(speaker_name, speaker_sampling_rate, speaker_channels, speaker_names),
+        end="",
+    )
     input()

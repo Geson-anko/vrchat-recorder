@@ -5,8 +5,10 @@ import pytest
 from vrchat_recorder.data_constants import FileExtensions as FE
 from vrchat_recorder.name_utils import (
     get_gamepad_log_file_name,
+    get_mic_audio_file_name,
     get_obs_video_file_name,
     get_osc_feedback_log_file_name,
+    get_speaker_audio_file_name,
     get_vrcrec_dir_name,
 )
 
@@ -39,3 +41,13 @@ def test_get_osc_feedback_log_file_name(date_str):
 def test_get_obs_video_file_name(date_str):
     expected_obs_video_file_name = f"{date_str}.{FE.VIDEO}"
     assert get_obs_video_file_name(date_str) == expected_obs_video_file_name
+
+
+def test_get_mic_audio_file_name(date_str):
+    expected_mic_audio_file_name = f"{date_str}.{FE.MICROPHONE}.{FE.WAV}"
+    assert get_mic_audio_file_name(date_str) == expected_mic_audio_file_name
+
+
+def test_get_speaker_audio_file_name(date_str):
+    expected_speaker_audio_file_name = f"{date_str}.{FE.SPEAKER}.{FE.WAV}"
+    assert get_speaker_audio_file_name(date_str) == expected_speaker_audio_file_name

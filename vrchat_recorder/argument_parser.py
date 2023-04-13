@@ -13,6 +13,8 @@ def get_parser() -> ArgumentParser:
     parser = get_type_selection_parser(parser)
     parser = get_osc_feedback_parser(parser)
     parser = get_obs_parser(parser)
+    parser = get_mic_parser(parser)
+    parser = get_speaker_parser(parser)
 
     return parser
 
@@ -47,6 +49,8 @@ def get_type_selection_parser(parser: ArgumentParser) -> ArgumentParser:
     parser.add_argument("--no_osc_feedback", action="store_true", help="Do not record the OSC feedback.")
     parser.add_argument("--no_gamepad", action="store_true", help="Do not record the gamepad input.")
     parser.add_argument("--no_obs", action="store_true", help="Do not control OBS and play video is not recorded.")
+    parser.add_argument("--no_mic", action="store_true", help="Do not record the microphone.")
+    parser.add_argument("--no_speaker", action="store_true", help="Do not record the speaker.")
 
     return parser
 
@@ -83,5 +87,49 @@ def get_obs_parser(parser: ArgumentParser) -> ArgumentParser:
     parser.add_argument(
         "--obs_websocket_password", default="password", help="The password of the OBS websocket server."
     )
+
+    return parser
+
+
+def get_mic_parser(parser: ArgumentParser) -> ArgumentParser:
+    """Create a parser for the microphone recording.
+
+    Args:
+        parser (ArgumentParser): The base parser.
+
+    Returns:
+        parser (ArgumentParser): The argument parser for recording the microphone.
+    """
+
+    parser.add_argument("--mic_device_name", "--mic", default=None, help="The name of the microphone device.")
+    parser.add_argument("--mic_sample_rate", type=int, default=44100, help="The sample rate of the microphone.")
+    parser.add_argument("--mic_block_size", type=int, default=4096, help="The chunk size of the microphone.")
+    parser.add_argument("--mic_channels", type=int, default=1, help="The number of channels of the microphone.")
+    parser.add_argument(
+        "--mic_flush_interval", type=int, default=100, help="The number of blocks to flush to the file at once."
+    )
+    parser.add_argument("--mic_subtype", default="PCM_16", help="The subtype of the microphone recording data.")
+
+    return parser
+
+
+def get_speaker_parser(parser: ArgumentParser) -> ArgumentParser:
+    """Create a parser for the speaker recording.
+
+    Args:
+        parser (ArgumentParser): The base parser.
+
+    Returns:
+        parser (ArgumentParser): The argument parser for recording the speaker.
+    """
+
+    parser.add_argument("--speaker_device_name", "--speaker", default=None, help="The name of the speaker device.")
+    parser.add_argument("--speaker_sample_rate", type=int, default=44100, help="The sample rate of the speaker.")
+    parser.add_argument("--speaker_block_size", type=int, default=4096, help="The chunk size of the speaker.")
+    parser.add_argument("--speaker_channels", type=int, default=2, help="The number of channels of the speaker.")
+    parser.add_argument(
+        "--speaker_flush_interval", type=int, default=100, help="The number of blocks to flush to the file at once."
+    )
+    parser.add_argument("--speaker_subtype", default="PCM_16", help="The subtype of the speaker recording data.")
 
     return parser
