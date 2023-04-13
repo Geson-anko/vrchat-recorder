@@ -138,7 +138,7 @@ def get_speaker_parser(parser: ArgumentParser) -> ArgumentParser:
 
 
 def get_vr_parser(parser: ArgumentParser) -> ArgumentParser:
-    """Create a parser for recording VR informations.
+    """Create a parser for recording VR information.
 
     Args:
         parser (ArgumentParser): The base parser.
