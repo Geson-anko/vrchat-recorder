@@ -19,7 +19,7 @@ def test_main(mocker: MockerFixture):
     # Mock confirm_preparation
     mocker.patch.object(confirm, "confirm_about_vrchat", MagicMock())
     mocker.patch.object(confirm, "confirm_about_obs", MagicMock())
-    mocker.patch.object(confirm, "confirm_about_controller", MagicMock())
+    mocker.patch.object(confirm, "confirm_about_gamepad", MagicMock())
     mocker.patch.object(confirm, "confirm_about_mic", MagicMock())
     mocker.patch.object(confirm, "confirm_about_speaker", MagicMock())
     mocker.patch.object(confirm, "confirm_about_vr_recording", MagicMock())
@@ -76,7 +76,7 @@ def test_main(mocker: MockerFixture):
     # Assert that confirm_preparation functions are called
     confirm.confirm_about_vrchat.assert_called_once()
     confirm.confirm_about_obs.assert_called_once()
-    confirm.confirm_about_controller.assert_called_once()
+    confirm.confirm_about_gamepad.assert_called_once()
     confirm.confirm_about_mic.assert_called_once()
     confirm.confirm_about_speaker.assert_called_once()
     confirm.confirm_about_vr_recording.assert_called_once()

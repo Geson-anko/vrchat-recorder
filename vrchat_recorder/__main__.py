@@ -85,7 +85,7 @@ def main(arg_list=None):
         confirm.confirm_about_obs(obs_websocket_ip, obs_websocket_port)
 
         if not no_gamepad:
-            confirm.confirm_about_controller()
+            confirm.confirm_about_gamepad()
 
         if not no_mic:
             confirm.confirm_about_mic(mic_device_name, mic_sample_rate, mic_channels)
