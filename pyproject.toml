@@ -8,14 +8,10 @@ packages = [{include = "vrchat_recorder"}]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"
-pygame = "^2.3.0"
 inputs = "^0.5"
-pyvjoy = "^1.0.1"
-keyboard = "^0.13.5"
 openvr = "^1.23.701"
 numpy = "^1.24.2"
 scipy = "^1.10.1"
-obs-websocket-py = "^1.0"
 obsws-python = "^1.4.2"
 python-osc = "^1.8.1"
 soundcard = "^0.4.2"
