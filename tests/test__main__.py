@@ -1,6 +1,7 @@
 import tempfile
 from unittest.mock import MagicMock
 
+import openvr
 from pytest_mock import MockerFixture
 
 from vrchat_recorder import confirm_preparation as confirm
@@ -9,6 +10,7 @@ from vrchat_recorder.audio import MicRecorder, SpeakerRecorder
 from vrchat_recorder.gamepad_recorder import GamepadRecorder
 from vrchat_recorder.obs_video_recorder import OBSVideoRecorder
 from vrchat_recorder.osc_feedback_recorder import OSCFeedbackRecorder
+from vrchat_recorder.vr import ControllerEventRecorder, TrackingRecorder
 
 
 def test_main(mocker: MockerFixture):
@@ -20,6 +22,7 @@ def test_main(mocker: MockerFixture):
     mocker.patch.object(confirm, "confirm_about_controller", MagicMock())
     mocker.patch.object(confirm, "confirm_about_mic", MagicMock())
     mocker.patch.object(confirm, "confirm_about_speaker", MagicMock())
+    mocker.patch.object(confirm, "confirm_about_vr_recording", MagicMock())
 
     # Mock GamepadRecorder
     mocker.patch.object(GamepadRecorder, "__init__", MagicMock(return_value=None))
@@ -51,6 +54,20 @@ def test_main(mocker: MockerFixture):
     mocker.patch.object(SpeakerRecorder, "record_background", MagicMock())
     mocker.patch.object(SpeakerRecorder, "shutdown", MagicMock())
 
+    # Mock VRSystem
+    vr_system = MagicMock(spec=openvr.IVRSystem)
+    mocker.patch.object(openvr, "init", MagicMock(return_value=vr_system))
+
+    # Mock TrackingRecorder
+    mocker.patch.object(TrackingRecorder, "__init__", MagicMock(return_value=None))
+    mocker.patch.object(TrackingRecorder, "record_background", MagicMock())
+    mocker.patch.object(TrackingRecorder, "shutdown", MagicMock())
+
+    # Mock ControllerEventRecorder
+    mocker.patch.object(ControllerEventRecorder, "__init__", MagicMock(return_value=None))
+    mocker.patch.object(ControllerEventRecorder, "record_background", MagicMock())
+    mocker.patch.object(ControllerEventRecorder, "shutdown", MagicMock())
+
     # Mock time.sleep to raise KeyboardInterrupt after the first call
     mocker.patch("time.sleep", MagicMock(side_effect=KeyboardInterrupt))
 
@@ -62,6 +79,7 @@ def test_main(mocker: MockerFixture):
     confirm.confirm_about_controller.assert_called_once()
     confirm.confirm_about_mic.assert_called_once()
     confirm.confirm_about_speaker.assert_called_once()
+    confirm.confirm_about_vr_recording.assert_called_once()
 
     # Assert that the recorders are initialized and their methods are called
     GamepadRecorder.__init__.assert_called_once()
@@ -83,3 +101,11 @@ def test_main(mocker: MockerFixture):
     SpeakerRecorder.__init__.assert_called_once()
     SpeakerRecorder.record_background.assert_called_once()
     SpeakerRecorder.shutdown.assert_called_once()
+
+    TrackingRecorder.__init__.assert_called_once()
+    TrackingRecorder.record_background.assert_called_once()
+    TrackingRecorder.shutdown.assert_called_once()
+
+    ControllerEventRecorder.__init__.assert_called_once()
+    ControllerEventRecorder.record_background.assert_called_once()
+    ControllerEventRecorder.shutdown.assert_called_once()
