@@ -35,17 +35,17 @@ def test_confirm_about_vrchat(mocker: MockerFixture, VRCHAT_OSC_IP, VRCHAT_OSC_P
     mock_input.assert_called_once()
 
 
-def test_confirm_about_controller(mocker: MockerFixture) -> None:
+def test_confirm_about_gamepad(mocker: MockerFixture) -> None:
     # Mock the input and print functions
     mock_input = mocker.patch("builtins.input", return_value="")
     mock_print = mocker.patch("builtins.print")
 
-    # Call the confirm_about_controller function
-    mod.confirm_about_controller()
+    # Call the confirm_about_gamepad function
+    mod.confirm_about_gamepad()
 
     # Check if the print function was called with the correct arguments
     expected_output = "\n".join([f"{i}: {controller.name}" for i, controller in enumerate(inputs.devices.gamepads)])
-    mock_print.assert_called_once_with(mod.confirm_about_controller_prompt.format(expected_output), end="")
+    mock_print.assert_called_once_with(mod.confirm_about_gamepad_prompt.format(expected_output), end="")
 
     # Check if the input function was called
     mock_input.assert_called_once()
