@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "vrchat-recorder"
-version = "0.1.0"
+version = "0.2.0"
 description = "VRChat Recorder is a tool for recording VRChat Videos, Audios, OSC Feedbacks, and Controller inputs."
-authors = ["Your Name <you@example.com>"]
+authors = ["59220704+Geson-anko@users.noreply.github.com"]
 readme = "README.md"
 packages = [{include = "vrchat_recorder"}]
 
