@@ -24,18 +24,27 @@ pip install -e .
 
 ## Usage
 
-```bash
-python -m vrchat-recorder -d <directory>
+```pwsh
+python -m vrchat_recorder -d <directory> `
+    --mic "Mic Device Name" `
+    --speaker "Headphone Device Name" `
+    # --no_gamepad ` # If you don't want to record gamepad info.
+    # --no_obs ` # If you don't want to record by OBS.
+    # --no_osc_feedback ` # If you don't want to record OSC feedback.
+    # --no_mic ` # If you don't want to record mic.
+    # --no_speaker ` # If you don't want to record speaker.
+    # --no_vr ` # If you don't want to record VR info.
 ```
 
 このコマンドで記録を開始することができます。`Ctrl+C`で停止できます。
+[スクリプトファイルとして起動する場合はデモプログラムを参照してください。](/demos/run.ps1)
 記録されたデータは`<directory>/<YYYY-MM-DD-hh-mm-ss-millisec>.vrcrec`ディレクトリに保存されます。通常はOBSの起動やVRChatのOSCの有効化を確認するためのメッセージが表示されます。
 
 ### Recording data
 
 - プレイ動画・音声
 
-  OBS Studioによって録画されます。事前にOBS Studioを起動し、VRChatの画面や音声が録画されるように設定しておいてください。
+  OBS Studioによって録画されます。事前にOBS Studioを起動し、VRChatの画面が録画されるように設定しておいてください。
 
   録画はpythonによって自動的に開始され、記録された動画は`.vrcrec/<YYYY-MM-DD-hh-mm-ss-millisec>.video.<ext>`に保存されます。このファイルはOBS Studioで設定された保存場所から移動されてるため、記録中に`.vrcrec`に動画ファイルは存在しません。
   ファイル名に含まれる時刻はディレクトリの時刻と少しずれます。また、`<ext>`はOBS Studioで設定されたファイル形式です。
@@ -64,7 +73,32 @@ python -m vrchat-recorder -d <directory>
   1679657265.7147608,ABS_X,int,128
   ```
 
+- Mic / Speakerの音声データ
+
+  Mic / Speakerの音声データをWAV形式で記録します。
+  ファイルは`.vrcrec/audio/<YYYY-MM-DD-hh-mm-ss-millisec>.<mic or speaker>.wav`に保存されます。ファイル名に含まれる時刻はディレクトリの時刻と少しだけずれる事があります。
+
+- VR Deviceの入力データ
+
+  HMDの姿勢やコントローラの入力データを保存します。`.vrcrec/vr`ディレクトリの中に記録されます。
+  コントローラーのボタンイベントは`<YYYY-MM-DD-hh-mm-ss-millisec>.event.ctrlr.csv`に保存されます。
+
+  フォーマットは次のようなCSVです。[`event_type`](https://github.com/ValveSoftware/openvr/blob/master/headers/openvr.h#L735)や[`controller_role`](https://github.com/ValveSoftware/openvr/blob/master/headers/openvr.h#L230), [`buttun_id`](https://github.com/ValveSoftware/openvr/blob/master/headers/openvr.h#L981)の割り当ては[OpenVRを参照願います。](https://github.com/ValveSoftware/openvr/blob/master/headers/openvr.h)
+
+  ```csv
+  timestamp,event_type,controller_role,button_id,age_seconds
+  1681472097.320673,202,1,33,13.319028854370117
+  ```
+
+  姿勢やトリガーの押し込み具合といった逐次データは`<YYYY-MM-DD-hh-mm-ss-millisec>.tracking.bin`に保存されます。
+  このファイルはバイナリファイルで、[1フレームのデータ構造は`tracking_data_holders.py`の`VRDeviceTrackingDataHolder`を参照してください。](/vrchat_recorder/vr/tracking_data_holders.py)
+
+  バイナリファイルの読み出しは`vrchat_recorder.vr.TrackingReader`を使用してください。
+  [詳しくはトラッキングデータの記録と読み出しのデモコードを参照してください](/demos/vr_tracking.py)
+
 ### Options
+
+#### Basics
 
 - `-d <directory>`, `--output-dir <directory>`:
   記録データを保存するディレクトリを指定します。デフォルトではカレントディレクトリです。
@@ -78,6 +112,8 @@ python -m vrchat-recorder -d <directory>
 - `--log_level <level>`:
   ログレベルを指定します。デフォルトでは`INFO`です。
 
+#### VRChat OSC
+
 - `--vrchat_osc_ip <ip>`:
   VRChatのOSCを受信するIPアドレスを指定します。デフォルトでは`localhost`です。
 
@@ -86,6 +122,8 @@ python -m vrchat-recorder -d <directory>
 
 - `--vrchat_osc_address <address>`:
   VRChatの受信するOSCアドレスを指定します。デフォルトでは`/avatar/parameters/*`です。
+
+#### OBS
 
 - `--obs_websocket_ip <ip>`:
   OBS StudioのWebsocketを受信するIPアドレスを指定します。デフォルトでは`localhost`です。
@@ -96,8 +134,10 @@ python -m vrchat-recorder -d <directory>
 - `--obs_websocket_password <password>`:
   OBS StudioのWebsocketのパスワードを指定します。WebSocketServerの認証設定をしていない場合は指定する必要はありません。
 
+#### Audio (Mic)
+
 - `--mic_device_name <name>`, `--mic <name>`:
-  録音するマイクのデバイス名を指定します。デフォルトではデフォルトのマイクを使用します。
+  録音するマイクのデバイス名を指定します。デフォルトではシステムデフォルトのマイクを使用します。
 
 - `mic_sample_rate <rate>`:
   録音するマイクのサンプリングレートを指定します。デフォルトでは`44100`です。
@@ -114,8 +154,10 @@ python -m vrchat-recorder -d <directory>
 - `--mic_subtype <subtype>`:
   録音する音声ファイルのサブタイプを指定します。デフォルトでは`PCM_16`です。
 
+#### Audio (Speaker)
+
 - `--speaker_device_name <name>`, `--speaker <name>`:
-  録音するスピーカーのデバイス名を指定します。デフォルトではデフォルトのスピーカーを使用します。
+  録音するスピーカーのデバイス名を指定します。デフォルトではシステムデフォルトのスピーカーを使用します。
 
 - `--speaker_sample_rate <rate>`:
   録音するスピーカーのサンプリングレートを指定します。デフォルトでは`44100`です。
@@ -132,6 +174,8 @@ python -m vrchat-recorder -d <directory>
 - `--speaker_subtype <subtype>`:
   録音する音声ファイルのサブタイプを指定します。デフォルトでは`PCM_16`です。
 
+#### VR
+
 - `--vr_tracking_fps <fps>`:
   VRトラッキング情報を記録するFPSを指定します。デフォルトでは`72.0`です。
 
@@ -143,6 +187,8 @@ python -m vrchat-recorder -d <directory>
 
 - `--vr_controller_event_flush_interval_seconds <seconds>`:
   VRコントローラーのイベントを記録する際のファイルへのフラッシュ間隔(seconds)を指定します。デフォルトでは`10.0`です。
+
+#### Feature Deactivation Flags
 
 - `--no_osc_feedback`:
   OSCフィードバックを記録しない場合は指定します。デフォルトでは記録します。
