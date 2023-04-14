@@ -35,17 +35,69 @@ def test_confirm_about_vrchat(mocker: MockerFixture, VRCHAT_OSC_IP, VRCHAT_OSC_P
     mock_input.assert_called_once()
 
 
-def test_confirm_about_controller(mocker: MockerFixture) -> None:
+def test_confirm_about_gamepad(mocker: MockerFixture) -> None:
     # Mock the input and print functions
     mock_input = mocker.patch("builtins.input", return_value="")
     mock_print = mocker.patch("builtins.print")
 
-    # Call the confirm_about_controller function
-    mod.confirm_about_controller()
+    # Call the confirm_about_gamepad function
+    mod.confirm_about_gamepad()
 
     # Check if the print function was called with the correct arguments
     expected_output = "\n".join([f"{i}: {controller.name}" for i, controller in enumerate(inputs.devices.gamepads)])
-    mock_print.assert_called_once_with(mod.confirm_about_controller_prompt.format(expected_output), end="")
+    mock_print.assert_called_once_with(mod.confirm_about_gamepad_prompt.format(expected_output), end="")
+
+    # Check if the input function was called
+    mock_input.assert_called_once()
+
+
+def test_confirm_about_mic(mocker: MockerFixture) -> None:
+    # Mock the input and print functions
+    mock_input = mocker.patch("builtins.input", return_value="")
+    mock_print = mocker.patch("builtins.print")
+    mock_soundcard = mocker.patch("soundcard.all_microphones", return_value=[])
+
+    # Call the confirm_about_mic function
+    mod.confirm_about_mic("Microphone", 48000, 2)
+
+    # Check if the print function was called with the correct arguments
+    mock_print.assert_called_once_with(mod.confirm_about_mic_prompt.format("Microphone", 48000, 2, ""), end="")
+
+    # Check if the input function was called
+    mock_input.assert_called_once()
+
+    # Check if the soundcard.all_microphones function was called
+    mock_soundcard.assert_called_once()
+
+
+def test_confirm_about_speaker(mocker: MockerFixture) -> None:
+    # Mock the functions
+    mock_input = mocker.patch("builtins.input", return_value="")
+    mock_print = mocker.patch("builtins.print")
+    mock_soundcard = mocker.patch("soundcard.all_microphones", return_value=[])
+
+    # Call the confirm_about_speaker function
+    mod.confirm_about_speaker("Speaker", 48000, 2)
+
+    # Check if the print function was called with the correct arguments
+    mock_print.assert_called_once_with(mod.confirm_about_speaker_prompt.format("Speaker", 48000, 2, ""), end="")
+
+    # Check if the input function was called
+    mock_input.assert_called_once()
+
+    # Check if the soundcard.all_microphones function was called
+    mock_soundcard.assert_called_once_with(include_loopback=True)
+
+
+def test_confirm_about_vr_recoding(mocker: MockerFixture) -> None:
+    # Mock the functions
+    mock_input = mocker.patch("builtins.input", return_value="")
+    mock_print = mocker.patch("builtins.print")
+
+    # Call the confirm_about_vr_recording function
+    mod.confirm_about_vr_recording(30.0)
+
+    mock_print.assert_called_once_with(mod.confirm_about_vr_recording_prompt.format(30.0), end="")
 
     # Check if the input function was called
     mock_input.assert_called_once()

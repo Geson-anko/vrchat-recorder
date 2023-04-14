@@ -54,3 +54,47 @@ def get_obs_video_file_name(date_str: str) -> str:
         obs video file name. (str): The name of the OBS video file.
     """
     return f"{date_str}.{FE.VIDEO}"
+
+
+def get_mic_audio_file_name(date_str: str) -> str:
+    """Get the name of the microphone audio file.
+    Args:
+        date_str: (str): The date string.
+
+    Returns:
+        microphone audio file name. (str): The name of the microphone audio file.
+    """
+    return f"{date_str}.{FE.MICROPHONE}.{FE.WAV}"
+
+
+def get_speaker_audio_file_name(date_str: str) -> str:
+    """Get the name of the speaker audio file.
+    Args:
+        date_str: (str): The date string.
+
+    Returns:
+        speaker audio file name. (str): The name of the speaker audio file.
+    """
+    return f"{date_str}.{FE.SPEAKER}.{FE.WAV}"
+
+
+def get_vr_tracking_log_file_name(date_str: str) -> str:
+    """Get the name of the VR tracking log file.
+    Args:
+        date_str: (str): The date string.
+
+    Returns:
+        vr tracking log file name. (str): The name of the VR tracking log file.
+    """
+    return f"{date_str}.{FE.TRACKING}.{FE.BINARY}"
+
+
+def get_vr_controller_event_log_file_name(date_str: str) -> str:
+    """Get the name of the VR controller event log file.
+    Args:
+        date_str: (str): The date string.
+
+    Returns:
+        vr controller event log file name. (str): The name of the VR controller event log file.
+    """
+    return f"{date_str}.{FE.EVENT}.{FE.CONTROLLER}.{FE.CSV}"

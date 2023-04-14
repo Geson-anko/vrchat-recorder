@@ -10,6 +10,9 @@ class CSVHeaderNames:
     PARAMETER_NAME = "parameter_name"
     DATA_TYPE = "data_type"
     VALUE = "value"
+    CONTROLLER_ROLE = "controller_role"
+    BUTTON_ID = "button_id"
+    AGE_SECONDS = "age_seconds"
 
 
 class FileExtensions:
@@ -21,6 +24,12 @@ class FileExtensions:
     CONTROLLER = "ctrlr"
     VIDEO = "video"
     GAMEPAD = "gamepad"
+    WAV = "wav"
+    MICROPHONE = "mic"
+    SPEAKER = "speaker"
+    EVENT = "event"
+    BINARY = "bin"
+    TRACKING = "tracking"
 
 
 class DataTypeNames:
