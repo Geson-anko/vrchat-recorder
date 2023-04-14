@@ -132,6 +132,18 @@ python -m vrchat-recorder -d <directory>
 - `--speaker_subtype <subtype>`:
   録音する音声ファイルのサブタイプを指定します。デフォルトでは`PCM_16`です。
 
+- `--vr_tracking_fps <fps>`:
+  VRトラッキング情報を記録するFPSを指定します。デフォルトでは`72.0`です。
+
+- `--vr_tracking_flush_interval <interval>`:
+  VRトラッキング情報を記録する際のファイルへのフラッシュ間隔(frame数)を指定します。デフォルトでは`100`です。
+
+- `--vr_controller_event_poll_interval <interval>`:
+  VRコントローラーのイベントを記録する際のポーリング間隔(seconds)を指定します。デフォルトでは`0.001`です。
+
+- `--vr_controller_event_flush_interval_seconds <seconds>`:
+  VRコントローラーのイベントを記録する際のファイルへのフラッシュ間隔(seconds)を指定します。デフォルトでは`10.0`です。
+
 - `--no_osc_feedback`:
   OSCフィードバックを記録しない場合は指定します。デフォルトでは記録します。
 
@@ -147,11 +159,14 @@ python -m vrchat-recorder -d <directory>
 - `--no_speaker`:
   スピーカーを用いて音声を録音しない場合は指定します。デフォルトでは記録します。
 
+- `--no_vr`:
+  VRトラッキング情報やVRコントローラーのイベントを記録しない場合は指定します。デフォルトでは記録します。
+
 ## 開発途中
 
 - [ ] マウスやヘッドセットの操作情報にも対応する。
   - [ ] マウスとキーボードによる操作記録機能の実装。
-  - [ ] VRヘッドセットとコントローラによる操作記録機能の実装
+  - [x] VRヘッドセットとコントローラによる操作記録機能の実装
 - [ ] HMDに映っているいる映像も記録できるようにする。
 
 ## License
