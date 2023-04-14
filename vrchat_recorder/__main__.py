@@ -6,6 +6,7 @@ import sys
 import time
 
 import inputs
+import openvr
 import soundcard as sc
 
 from . import confirm_preparation as confirm
@@ -16,6 +17,7 @@ from .date_utils import get_now_str
 from .gamepad_recorder import GamepadRecorder
 from .obs_video_recorder import OBSVideoRecorder
 from .osc_feedback_recorder import OSCFeedbackRecorder
+from .vr import ControllerEventRecorder, TrackingRecorder
 
 root_logger = logging.getLogger()
 stream_hdlr = logging.StreamHandler(sys.stdout)
@@ -66,11 +68,17 @@ def main(arg_list=None):
     speaker_flush_interval = args.speaker_flush_interval
     speaker_subtype = args.speaker_subtype
 
+    vr_tracking_fps = args.vr_tracking_fps
+    vr_tracking_flush_interval = args.vr_tracking_flush_interval
+    vr_controller_event_poll_interval = args.vr_controller_event_poll_interval
+    vr_controller_event_flush_interval_seconds = args.vr_controller_event_flush_interval_seconds
+
     no_osc_feedback = args.no_osc_feedback
     no_gamepad = args.no_gamepad
     no_obs = args.no_obs
     no_mic = args.no_mic
     no_speaker = args.no_speaker
+    no_vr = args.no_vr
 
     if not no_ask:
         confirm.confirm_about_vrchat(vrchat_osc_ip, vrchat_osc_port, vrchat_osc_address)
@@ -84,6 +92,9 @@ def main(arg_list=None):
 
         if not no_speaker:
             confirm.confirm_about_speaker(speaker_device_name, speaker_sample_rate, speaker_channels)
+
+        if not no_vr:
+            confirm.confirm_about_vr_recording(vr_tracking_fps)
 
     else:
         logger.info("Skipping confirmation.")
@@ -170,6 +181,35 @@ def main(arg_list=None):
         speaker_recorder.record_background()
         logger.info(f"Start Speaker Recording: {speaker_output_path}")
         background_recorders.append(speaker_recorder)
+
+    if not no_vr:
+        vr_dir_path = os.path.join(vrcrec_dir_path, "vr")
+        os.makedirs(vr_dir_path, exist_ok=True)
+        vrsystem = openvr.init(openvr.VRApplication_Background)
+
+        vr_tracking_file_name = name_utils.get_vr_tracking_log_file_name(get_now_str(date_format))
+        vr_tracking_output_path = os.path.join(vr_dir_path, vr_tracking_file_name)
+        vr_tracking_recorder = TrackingRecorder(
+            vr_tracking_output_path,
+            vrsystem,
+            vr_tracking_fps,
+            vr_tracking_flush_interval,
+        )
+
+        vr_controller_event_file_name = name_utils.get_vr_controller_event_log_file_name(get_now_str(date_format))
+        vr_controller_event_output_path = os.path.join(vr_dir_path, vr_controller_event_file_name)
+        vr_controller_event_recorder = ControllerEventRecorder(
+            vr_controller_event_output_path,
+            vrsystem,
+            vr_controller_event_poll_interval,
+            vr_controller_event_flush_interval_seconds,
+        )
+
+        logger.info(f"Start VR Device Recording: {vr_dir_path}")
+        vr_tracking_recorder.record_background()
+        vr_controller_event_recorder.record_background()
+        background_recorders.append(vr_tracking_recorder)
+        background_recorders.append(vr_controller_event_recorder)
 
     logger.info("Press Ctrl+C to stop recording...")
 

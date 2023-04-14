@@ -7,6 +7,7 @@ from vrchat_recorder.argument_parser import (
     get_osc_feedback_parser,
     get_speaker_parser,
     get_type_selection_parser,
+    get_vr_parser,
 )
 
 
@@ -28,6 +29,7 @@ def test_get_type_selection_parser():
     assert not parser.get_default("no_obs")
     assert not parser.get_default("no_mic")
     assert not parser.get_default("no_speaker")
+    assert not parser.get_default("no_vr")
 
 
 def test_get_osc_feedback_parser():
@@ -71,3 +73,13 @@ def test_get_speaker_parser():
     assert parser.get_default("speaker_channels") == 2
     assert parser.get_default("speaker_flush_interval") == 100
     assert parser.get_default("speaker_subtype") == "PCM_16"
+
+
+def test_get_vr_parser():
+    parser = ArgumentParser()
+    parser = get_vr_parser(parser)
+
+    assert parser.get_default("vr_tracking_fps") == 72.0
+    assert parser.get_default("vr_tracking_flush_interval") == 1000
+    assert parser.get_default("vr_controller_event_poll_interval") == 0.001
+    assert parser.get_default("vr_controller_event_flush_interval_seconds") == 10.0
